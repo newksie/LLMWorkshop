@@ -4,10 +4,9 @@
 
 # if __name__ == "__main__":
 #     socketio.run(app, debug=True)
-
-from app import create_app, socketio
 import eventlet
 eventlet.monkey_patch()
+from app import create_app, socketio
 
 app = create_app()
 
