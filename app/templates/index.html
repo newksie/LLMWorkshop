@@ -27,32 +27,22 @@
         const socket = io();
 
         // Update leaderboard in real-time
-        // socket.on("update_leaderboard", (data) => {
-        //     const leaderboardDiv = document.getElementById("leaderboard");
-        //     leaderboardDiv.innerHTML = ""; // Clear old leaderboard
-        //     data.forEach((entry) => {
-        //         const p = document.createElement("p");
-        //         p.textContent = `${entry.user}: ${entry.score}`;
-        //         leaderboardDiv.appendChild(p);
-        //     });
-        // });
-
-        // // Handle form submission
-        // document.getElementById("promptForm").addEventListener("submit", (e) => {
-        //     e.preventDefault();
-        //     const user = document.getElementById("user").value;
-        //     const prompt = document.getElementById("prompt").value;
-        //     socket.emit("submit_prompt", { user, prompt });
-        // });
-        socket.emit("submit_prompt", { user: user, prompt: prompt });
-        socket.on("update_leaderboard", function(data) {
+        socket.on("update_leaderboard", (data) => {
             const leaderboardDiv = document.getElementById("leaderboard");
-            leaderboardDiv.innerHTML = "";
-            data.forEach(function(entry) {
+            leaderboardDiv.innerHTML = ""; // Clear old leaderboard
+            data.forEach((entry) => {
                 const p = document.createElement("p");
                 p.textContent = `${entry.user}: ${entry.score}`;
                 leaderboardDiv.appendChild(p);
             });
+        });
+
+        // Handle form submission
+        document.getElementById("promptForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const user = document.getElementById("user").value;
+            const prompt = document.getElementById("prompt").value;
+            socket.emit("submit_prompt", { user, prompt });
         });
     </script>
 </body>
