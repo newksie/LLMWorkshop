@@ -1,2 +1,1 @@
-# LLMWorkshop
-Code for BDSS LLM workshop
+LLM Testing

@@ -1,6 +1,0 @@
-.venv/
-__pycache__/
-*.pyc
-.env
-
-### gunicorn app:app --chdir ./app_dir
