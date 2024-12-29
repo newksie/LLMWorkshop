@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, jsonify
 from models import db, PromptSubmission
 from sqlalchemy import desc
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
