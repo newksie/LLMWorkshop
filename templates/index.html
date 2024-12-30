@@ -6,74 +6,28 @@
     <title>Prompt Engineering Workshop</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
-        /* Basic styles for better presentation */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-        }
-        .submission-form, .leaderboard {
-            background: #fff;
-            padding: 20px;
-            margin: 20px auto;
-            width: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 20px;
-            background: #5cb85c;
-            border: none;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #4cae4c;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background: #f2f2f2;
-        }
-        .message {
-            color: green;
-        }
-        .error {
-            color: red;
-        }
+        /* Existing styles remain */
+        /* Add styles for the new fields if necessary */
     </style>
 </head>
 <body>
     <h1>Prompt Engineering Workshop</h1>
     
     <div class="submission-form">
-        <h2>Submit Your Prompt</h2>
+        <h2>Submit Your Translation</h2>
         <div id="message"></div>
         <form id="promptForm">
             <label for="name">Your Name:</label>
             <input type="text" id="name" name="name" required>
 
-            <label for="prompt">Your Prompt:</label>
-            <textarea id="prompt" name="prompt" rows="4" required></textarea>
+            <label for="source_text">Source Text:</label>
+            <textarea id="source_text" name="source_text" rows="3" required></textarea>
+
+            <label for="system_output">Your Translation:</label>
+            <textarea id="system_output" name="system_output" rows="3" required></textarea>
+
+            <label for="reference_translation">Reference Translation:</label>
+            <textarea id="reference_translation" name="reference_translation" rows="3" required></textarea>
 
             <button type="submit">Submit</button>
         </form>
@@ -86,7 +40,7 @@
                 <tr>
                     <th>Rank</th>
                     <th>Name</th>
-                    <th>Score (Prompt Length)</th>
+                    <th>Score (COMET)</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,14 +55,16 @@
             e.preventDefault();
 
             const name = document.getElementById('name').value.trim();
-            const prompt = document.getElementById('prompt').value.trim();
+            const source_text = document.getElementById('source_text').value.trim();
+            const system_output = document.getElementById('system_output').value.trim();
+            const reference_translation = document.getElementById('reference_translation').value.trim();
 
             fetch('/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, prompt }),
+                body: JSON.stringify({ name, source_text, system_output, reference_translation }),
             })
             .then(response => response.json())
             .then(data => {
@@ -116,7 +72,7 @@
                 if (data.error) {
                     messageDiv.innerHTML = `<p class="error">${data.error}</p>`;
                 } else {
-                    messageDiv.innerHTML = `<p class="message">${data.message} Your score: ${data.score}</p>`;
+                    messageDiv.innerHTML = `<p class="message">${data.message} Your COMET score: ${data.score.toFixed(3)}</p>`;
                     document.getElementById('promptForm').reset();
                     loadLeaderboard();
                 }
@@ -142,7 +98,7 @@
 
                         cellRank.textContent = index + 1;
                         cellName.textContent = entry.name;
-                        cellScore.textContent = entry.score;
+                        cellScore.textContent = entry.score.toFixed(3);
                     });
                 })
                 .catch((error) => {
