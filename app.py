@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from models import db, PromptSubmission
 from sqlalchemy import desc
 import os
-from utils import CometEvaluator
+from utils import BERTEvaluator
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,8 +19,8 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# Initialize COMET evaluator once at startup
-comet_evaluator = CometEvaluator()
+# Initialize BERT evaluator once at startup
+bert_evaluator = BERTEvaluator()
 
 @app.route('/')
 def index():
@@ -30,20 +30,22 @@ def index():
 def submit():
     data = request.get_json()
     name = data.get('name', '').strip()
-    source_text = data.get('source_text', '').strip()
+    # source_text = data.get('source_text', '').strip()
     system_output = data.get('system_output', '').strip()
     reference_translation = data.get('reference_translation', '').strip()
 
-    if not name or not source_text or not system_output or not reference_translation:
+    if not name or not system_output or not reference_translation:
+    # if not name or not source_text or not system_output or not reference_translation:
+
         return jsonify({'error': 'All fields are required.'}), 400
 
     try:
-        # Compute COMET score
-        score = comet_evaluator.evaluate(source_text, system_output, reference_translation)
+        # Compute BERT score
+        score = bert_evaluator.evaluate(system_output, reference_translation)
 
         submission = PromptSubmission(
             name=name,
-            source_text=source_text,
+            # source_text=source_text,
             system_output=system_output,
             reference_translation=reference_translation,
             score=score

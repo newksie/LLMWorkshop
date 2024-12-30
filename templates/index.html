@@ -20,8 +20,8 @@
             <label for="name">Your Name:</label>
             <input type="text" id="name" name="name" required>
 
-            <label for="source_text">Source Text:</label>
-            <textarea id="source_text" name="source_text" rows="3" required></textarea>
+            <!-- <label for="source_text">Source Text:</label> -->
+            <!-- <textarea id="source_text" name="source_text" rows="3" required></textarea> -->
 
             <label for="system_output">Your Translation:</label>
             <textarea id="system_output" name="system_output" rows="3" required></textarea>
@@ -55,7 +55,7 @@
             e.preventDefault();
 
             const name = document.getElementById('name').value.trim();
-            const source_text = document.getElementById('source_text').value.trim();
+            // const source_text = document.getElementById('source_text').value.trim();
             const system_output = document.getElementById('system_output').value.trim();
             const reference_translation = document.getElementById('reference_translation').value.trim();
 
@@ -64,7 +64,8 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, source_text, system_output, reference_translation }),
+                // body: JSON.stringify({ name, source_text, system_output, reference_translation }),
+                body: JSON.stringify({ name, system_output, reference_translation }),
             })
             .then(response => response.json())
             .then(data => {
