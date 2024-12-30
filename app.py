@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from models import db, PromptSubmission
 from sqlalchemy import desc
 import os
-from utils import BERTEvaluator
+# from utils import BERTEvaluator
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,7 +20,7 @@ with app.app_context():
     db.create_all()
 
 # Initialize BERT evaluator once at startup
-bert_evaluator = BERTEvaluator()
+# bert_evaluator = BERTEvaluator()
 
 @app.route('/')
 def index():
@@ -41,7 +41,8 @@ def submit():
 
     try:
         # Compute BERT score
-        score = bert_evaluator.evaluate(system_output, reference_translation)
+        # score = bert_evaluator.evaluate(system_output, reference_translation)
+        score = len(reference_translation)
 
         submission = PromptSubmission(
             name=name,

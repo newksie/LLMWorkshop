@@ -14,7 +14,6 @@ gunicorn = "^23.0.0"
 
 ipykernel = "^6.29.5"
 python-dotenv = "^1.0.1"
-bert-score = "^0.3.13"
 
 [build-system]
 requires = ["poetry-core"]
