@@ -50,6 +50,7 @@ def submit():
             # source_text=source_text,
             system_output=system_output,
             reference_translation=reference_translation,
+            llm_output=llm_output_text,
             score=score
         )
         db.session.add(submission)
