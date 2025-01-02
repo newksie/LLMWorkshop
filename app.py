@@ -36,10 +36,12 @@ def submit():
     # if not name or not source_text or not system_output or not reference_translation:
 
         return jsonify({'error': 'All fields are required.'}), 400
-
+    
     try:
         # Compute embeddings score
-        score = SimilarityScore(reference_translation, system_output)
+        llm_output_text = BasicAPICall(system_output)
+        
+        score = SimilarityScore(reference_translation, llm_output_text)
 
         # score = len(reference_translation)
 
@@ -53,7 +55,7 @@ def submit():
         db.session.add(submission)
         db.session.commit()
 
-        return jsonify({'message': 'Submission successful!', 'score': score}), 200
+        return jsonify({'message': 'Submission successful!', 'score': score, 'LLM Output': llm_output_text}), 200
 
     except EnvironmentError as env_err:
            # Handle missing environment variables
