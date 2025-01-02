@@ -54,8 +54,22 @@ def submit():
         db.session.commit()
 
         return jsonify({'message': 'Submission successful!', 'score': score}), 200
+
+    except EnvironmentError as env_err:
+           # Handle missing environment variables
+           return jsonify({'error': str(env_err)}), 500
+
+    except ConnectionError as conn_err:
+        # Handle network-related errors
+        return jsonify({'error': str(conn_err)}), 502
+
+    except ValueError as val_err:
+        # Handle invalid responses or parsing errors
+        return jsonify({'error': str(val_err)}), 500
+
     except Exception as e:
-        return jsonify({'error': f'An error occurred during evaluation: {str(e)}'}), 500
+        # Handle any other unforeseen errors
+        return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():

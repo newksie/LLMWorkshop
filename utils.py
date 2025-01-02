@@ -41,28 +41,60 @@ def AdvancedAPICall(prompt: dict) -> str:
     output_text = completion.choices[0].message.content
     return output_text
 
-def SimilarityScore(llm_output: str, reference_translation:str) -> float:
-    """Computes similarity score between two strings using all-MiniLM-L6-v2 embedding model. 
+def SimilarityScore(llm_output: str, reference_translation: str) -> float:
+    """
+    Computes similarity score between two strings using the all-MiniLM-L6-v2 embedding model via Hugging Face API.
 
     Args:
-        llm_output (str): system output from GPT4o-mini
-        reference_translation (str): reference translation
+        llm_output (str): System output from GPT4o-mini.
+        reference_translation (str): Reference translation.
 
     Returns:
-        float: similarity score with embeddings
-    """    
+        float: Similarity score with embeddings, or raises an exception with an appropriate error message.
+    """
     API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
-    HF_API_KEY = os.getenv("HF_API_KEY") # HF_API_KEY is an environment variable
-    headers = {"Authorization": f"Bearer {HF_API_KEY}"} 
-    translations = {
+    HF_API_KEY = os.getenv("HF_API_KEY")  # HF_API_KEY is an environment variable
+
+    if not HF_API_KEY:
+        raise EnvironmentError("Hugging Face API key (HF_API_KEY) is not set in environment variables.")
+
+    headers = {"Authorization": f"Bearer {HF_API_KEY}"}
+
+    payload = {
         "inputs": {
-        "source_sentence": reference_translation,
-        "sentences": [
-           llm_output
-           ]
-    },
+            "source_sentence": reference_translation,
+            "sentences": [
+                llm_output
+            ]
+        },
     }
-    response = requests.post(API_URL, headers=headers, json=translations)
-    scores = response.json()
-	
-    return scores[0]
+
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload, timeout=30)
+    except requests.exceptions.RequestException as e:
+        # Handle network-related errors
+        raise ConnectionError(f"Network error occurred while connecting to Hugging Face API: {str(e)}")
+
+    if response.status_code == 200:
+        try:
+            scores = response.json()
+            if isinstance(scores, list) and len(scores) > 0:
+                similarity = scores[0]
+                if isinstance(similarity, (int, float)):
+                    return similarity
+                else:
+                    raise ValueError(f"Unexpected score format: {similarity}")
+            else:
+                raise ValueError("Empty or invalid response format from Hugging Face API.")
+        except ValueError as ve:
+            raise ValueError(f"Error parsing response from Hugging Face API: {str(ve)}")
+        except Exception as e:
+            raise Exception(f"An unexpected error occurred while processing the response: {str(e)}")
+    else:
+        try:
+            error_info = response.json()
+            error_message = error_info.get("error", response.text)
+        except ValueError:
+            error_message = response.text
+
+        raise Exception(f"Hugging Face API returned an error [{response.status_code}]: {error_message}")
