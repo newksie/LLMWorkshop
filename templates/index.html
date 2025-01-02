@@ -73,7 +73,7 @@
                 if (data.error) {
                     messageDiv.innerHTML = `<p class="error">${data.error}</p>`;
                 } else {
-                    messageDiv.innerHTML = `<p class="message">${data.message} Your COMET score: ${data.score.toFixed(3)}</p>`;
+                    messageDiv.innerHTML = `<p class="message">${data.message} Your similarity score: ${data.score.toFixed(3)}</p>`;
                     document.getElementById('promptForm').reset();
                     loadLeaderboard();
                 }

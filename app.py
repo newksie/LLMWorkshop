@@ -4,6 +4,7 @@ from sqlalchemy import desc
 import os
 from utils import BasicAPICall, AdvancedAPICall, SimilarityScore
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
