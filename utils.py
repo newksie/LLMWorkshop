@@ -1,6 +1,7 @@
-# from openai import OpenAI
+from openai import OpenAI
+import requests
 import os
-# from bert_score import BERTScorer
+from dotenv import load_dotenv
 
 def BasicAPICall(prompt: str) -> str:
     """Makes call to GPT4o-mini using just a simple prompt, no system or assistant messages. 
@@ -21,38 +22,47 @@ def BasicAPICall(prompt: str) -> str:
     output_text = completion.choices[0].message.content
     return output_text
 
-class BERTEvaluator:
-    def __init__ (self):
-        self.model = 'yongsun-yoon/minilmv2-bertscore-distilled'
-        self.layers = 6
+def AdvancedAPICall(prompt: dict) -> str:
+    """Makes call to GPT4o-mini using full JSON format, allowing for system and assistant messages. 
 
-        self.scorer = BERTScorer(model_type=self.model, num_layers=self.layers)
+    Args:
+        prompt (dict): prompt to send to GPT4o-mini
 
-    def evaluate(self, reference, translation):
-        model = self.scorer
-        P, R, F = model.score([reference], [translation])
-        return F
-
-class CometEvaluator:
-    def __init__(self):
-        # Specify the metric to use; for example, 'wmt20-comet-da'
-        self.metric = 'Unbabel/wmt22-comet-da'
-
-        # Download and load the COMET model
-        model_path = download_model(self.metric)
-        self.model = load_from_checkpoint(model_path)
-
-    def evaluate(self, source: str, hypothesis: str, reference: str) -> float:
-        data = [
-            {
-        "src": f"{source}",
-        "mt": f"{hypothesis}",
-        "ref": f"{reference}"
-        # "ref": "Can it be delivered between 10 to 15 minutes?"
-            }
+    Returns:
+        str: output text from model.
+    """    
+    client = OpenAI()
+    completion = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        prompt  
         ]
-        scores = self.model.predict(
-            data,
-        )
-        return scores[0]  # Return the score for the first (and only) input
+    )
+    output_text = completion.choices[0].message.content
+    return output_text
 
+def SimilarityScore(llm_output: str, reference_translation:str) -> float:
+    """Computes similarity score between two strings using all-MiniLM-L6-v2 embedding model. 
+
+    Args:
+        llm_output (str): system output from GPT4o-mini
+        reference_translation (str): reference translation
+
+    Returns:
+        float: similarity score with embeddings
+    """    
+    API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
+    HF_API_KEY = os.getenv("HF_API_KEY") # HF_API_KEY is an environment variable
+    headers = {"Authorization": f"Bearer {HF_API_KEY}"} 
+    translations = {
+        "inputs": {
+        "source_sentence": reference_translation,
+        "sentences": [
+           llm_output
+           ]
+    },
+    }
+    response = requests.post(API_URL, headers=headers, json=translations)
+    scores = response.json()
+	
+    return scores[0]
