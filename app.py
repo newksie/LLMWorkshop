@@ -39,9 +39,9 @@ def submit():
     
     try:
         # Compute embeddings score
-        llm_output_text = BasicAPICall(system_output)
+        llm_output = BasicAPICall(system_output)
         
-        score = SimilarityScore(reference_translation, llm_output_text)
+        score = SimilarityScore(reference_translation, llm_output)
 
         # score = len(reference_translation)
 
@@ -50,13 +50,13 @@ def submit():
             # source_text=source_text,
             system_output=system_output,
             reference_translation=reference_translation,
-            llm_output=llm_output_text,
+            llm_output=llm_output,
             score=score
         )
         db.session.add(submission)
         db.session.commit()
 
-        return jsonify({'message': 'Submission successful!', 'score': score, 'LLM Output': llm_output_text}), 200
+        return jsonify({'message': 'Submission successful!', 'score': score, 'llm_output': llm_output}), 200
 
     except EnvironmentError as env_err:
            # Handle missing environment variables
