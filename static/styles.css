@@ -1,0 +1,29 @@
+#leaderboardTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#leaderboardTable th, #leaderboardTable td {
+    padding: 12px; /* Adjust padding for spacing */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#leaderboardTable th {
+    background-color: #f4f4f4;
+}
+
+#leaderboardTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.leaderboard {
+    margin-top: 20px;  /* Space above */
+    margin-bottom: 20px; /* Space below */
+}
+
+#leaderboardTable {
+    margin: auto;
+    width: 80%; /* Adjust width */
+    text-align: center;
+}
