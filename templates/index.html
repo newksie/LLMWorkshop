@@ -114,10 +114,8 @@
                         cellRank.textContent = index + 1;
                         cellName.textContent = entry.name;
                         cellScore.textContent = entry.score.toFixed(3);
-                        // cellSystemPrompt.textContent = entry.system_prompt;
-                        // cellPrompt.textContent = entry.system_output;
-                        cellSystemPrompt.textContent = document.getElementById('system_prompt').value;
-                        cellPrompt.textContent = document.getElementById('system_output').value;
+                        cellSystemPrompt.textContent = entry.system_prompt;
+                        cellPrompt.textContent = entry.system_output;
                     });
                 })
                 .catch((error) => {

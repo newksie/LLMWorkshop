@@ -81,7 +81,12 @@ def submit():
 def leaderboard():
     top_submissions = PromptSubmission.query.order_by(desc(PromptSubmission.score)).limit(20).all()
     leaderboard_data = [
-        {'name': submission.name, 'score': submission.score}
+        {
+            'name': submission.name,
+            'score': submission.score,
+            'system_prompt': submission.system_prompt,
+            'system_output': submission.system_output
+        }
         for submission in top_submissions
     ]
     return jsonify(leaderboard_data), 200
