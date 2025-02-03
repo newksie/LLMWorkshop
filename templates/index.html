@@ -116,8 +116,8 @@
                         cellScore.textContent = entry.score.toFixed(3);
                         // cellSystemPrompt.textContent = entry.system_prompt;
                         // cellPrompt.textContent = entry.system_output;
-                        cellSystemPrompt.textContent = system_prompt;
-                        cellPrompt.textContent = system_output;
+                        cellSystemPrompt.textContent = document.getElementById('system_prompt').value;
+                        cellPrompt.textContent = document.getElementById('system_output').value;
                     });
                 })
                 .catch((error) => {
