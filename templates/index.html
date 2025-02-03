@@ -12,6 +12,8 @@
 </head>
 <body>
     <h1>Prompt Engineering Workshop</h1>
+    <p>The prompt is formatted like f"{prompt}: {tobe_translated}", where tobe_translated is the following:</p>
+    <p>J'adorerais boire un café avec toi sur le balcon, mais avons-nous un canapé pour nous asseoir ? Nous pourrions aussi prendre quelques collations, peut-être des canapés ?</p>
     
     <div class="submission-form">
         <h2>Submit Your Prompt</h2>
@@ -23,7 +25,7 @@
             <!-- <label for="source_text">Source Text:</label> -->
             <!-- <textarea id="source_text" name="source_text" rows="3" required></textarea> -->
 
-            <label for="system_prompt">Your Prompt:</label>
+            <label for="system_prompt">Your System Prompt:</label>
             <textarea id="system_prompt" name="system_prompt" rows="3" required></textarea>
 
             <label for="system_output">Your Prompt:</label>
@@ -44,6 +46,8 @@
                     <th>Rank</th>
                     <th>Name</th>
                     <th>Score</th>
+                    <th>SystemPrompt</th>
+                    <th>Prompt</th>
                 </tr>
             </thead>
             <tbody>
@@ -104,10 +108,14 @@
                         const cellRank = row.insertCell(0);
                         const cellName = row.insertCell(1);
                         const cellScore = row.insertCell(2);
+                        const cellSystemPrompt = row.insertCell(3);
+                        const cellPrompt = row.insertCell(4);
 
                         cellRank.textContent = index + 1;
                         cellName.textContent = entry.name;
                         cellScore.textContent = entry.score.toFixed(3);
+                        cellSystemPrompt.textContent = entry.system_prompt;
+                        cellPrompt.textContent = entry.system_output;
                     });
                 })
                 .catch((error) => {
