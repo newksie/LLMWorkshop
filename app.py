@@ -29,17 +29,19 @@ def submit():
     data = request.get_json()
     name = data.get('name', '').strip()
     # source_text = data.get('source_text', '').strip()
+    system_prompt = data.get('system_prompt', '').strip()
     system_output = data.get('system_output', '').strip()
-    reference_translation = data.get('reference_translation', '').strip()
-
-    if not name or not system_output or not reference_translation:
+    # reference_translation = data.get('reference_translation', '').strip()
+    # reference_translation = "J'adorerais boire un café avec toi sur le balcon, mais avons-nous un canapé pour nous asseoir ? Nous pourrions aussi prendre quelques collations, peut-être des canapés ?"
+    reference_translation = "I would love to drink some coffee with you on the balcony, but do we have a sofa to sit on? We could also have some snacks, perhaps some canapes?"
+    if not name or not system_output or not reference_translation or not system_prompt:
     # if not name or not source_text or not system_output or not reference_translation:
 
         return jsonify({'error': 'All fields are required.'}), 400
     
     try:
         # Compute embeddings score
-        llm_output = BasicAPICall(system_output)
+        llm_output = BasicAPICall(system_prompt, system_output)
         
         score = SimilarityScore(reference_translation, llm_output)
 
@@ -48,8 +50,9 @@ def submit():
         submission = PromptSubmission(
             name=name,
             # source_text=source_text,
+            system_prompt=system_prompt,
             system_output=system_output,
-            reference_translation=reference_translation,
+            # reference_translation=reference_translation,
             llm_output=llm_output,
             score=score
         )
@@ -76,7 +79,7 @@ def submit():
 
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
-    top_submissions = PromptSubmission.query.order_by(desc(PromptSubmission.score)).limit(10).all()
+    top_submissions = PromptSubmission.query.order_by(desc(PromptSubmission.score)).limit(20).all()
     leaderboard_data = [
         {'name': submission.name, 'score': submission.score}
         for submission in top_submissions

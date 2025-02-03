@@ -3,7 +3,7 @@ import requests
 import os
 from dotenv import load_dotenv
 
-def BasicAPICall(prompt: str) -> str:
+def BasicAPICall(system_prompt: str, prompt: str, reference_translation) -> str:
     """Makes call to GPT4o-mini using just a simple prompt, no system or assistant messages. 
 
     Args:
@@ -13,10 +13,13 @@ def BasicAPICall(prompt: str) -> str:
         str: output text from model.
     """    
     client = OpenAI()
+    tobe_translated = "J'adorerais boire un café avec toi sur le balcon, mais avons-nous un canapé pour nous asseoir ? Nous pourrions aussi prendre quelques collations, peut-être des canapés ?"
+
     completion = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-        {"role": "user", "content": f"{prompt}"}
+        {"role": "system", "content": f"{system_prompt}"},
+        {"role": "user", "content": f"{prompt}: {tobe_translated}"}
         ]
     )
     output_text = completion.choices[0].message.content
