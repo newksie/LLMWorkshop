@@ -13,8 +13,8 @@ def BasicAPICall(system_prompt: str, prompt: str) -> str:
         str: output text from model.
     """    
     client = OpenAI()
-    tobe_translated = "J'adorerais boire un café avec toi sur le balcon, mais avons-nous un canapé pour nous asseoir ? Nous pourrions aussi prendre quelques collations, peut-être des canapés?"
-
+    # tobe_translated = "J'adorerais boire un café avec toi sur le balcon, mais avons-nous un canapé pour nous asseoir ? Nous pourrions aussi prendre quelques collations, peut-être des canapés?"
+    tobe_translated = "Le weekend dernier, je flânais en ville et, coup de chance, je suis tombée sur ma maman - nous habitons loin l'un de l'autre et nous ne nous retrouvons pas souvent. Enfin, elle est frileuse et j'avais un petit creux donc nous sommes allées dans un bar du coin pour réchauffer, goûter et boire un verre. Dans le bar, les lumières étaient éblouissantes et maman a été gonflée que le serveur la tutoie. Du coup, nous sommes allés dans un autre bar qu'un copain disait servir les cocktails chics. Mais, en fait, c'était un bordel - les boissons étaient écoeurantes et tout le monde était bourré. Enfin, après tout ça, nous avons fini notre retrouvaille chez moi avec une bouteille de pinard et des biscuits. "
     completion = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
