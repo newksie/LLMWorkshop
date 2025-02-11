@@ -5,16 +5,14 @@
     <meta charset="UTF-8">
     <title>Prompt Engineering Workshop</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        /* Existing styles remain */
-        /* Add styles for the new fields if necessary */
-    </style>
+
 </head>
 <body>
     <h1>Prompt Engineering Workshop</h1>
+    <!-- Below are the base sentences -->
     <p>The prompt fed to the llm is formatted like f"{prompt}: {to_be_translated}", where to_be_translated is the following:</p>
-    <!-- <p>J'adorerais boire un café avec toi sur le balcon, mais avons-nous un canapé pour nous asseoir ? Nous pourrions aussi prendre quelques collations, peut-être des canapés ?</p> -->
     <p>Le weekend dernier, je flânais en ville et, coup de chance, je suis tombée sur ma maman - nous habitons loin l'un de l'autre et nous ne nous retrouvons pas souvent. Enfin, elle est frileuse et j'avais un petit creux donc nous sommes allées dans un bar du coin pour réchauffer, goûter et boire un verre. Dans le bar, les lumières étaient éblouissantes et maman a été gonflée que le serveur la tutoie. Du coup, nous sommes allés dans un autre bar qu'un copain disait servir les cocktails chics. Mais, en fait, c'était un bordel - les boissons étaient écoeurantes et tout le monde était bourré. Enfin, après tout ça, nous avons fini notre retrouvaille chez moi avec une bouteille de pinard et des biscuits. </p>
+    
     <div class="submission-form">
         <h2>Submit Your Prompt</h2>
         <div id="message"></div>
@@ -22,17 +20,11 @@
             <label for="name">Your Name:</label>
             <input type="text" id="name" name="name" required>
 
-            <!-- <label for="source_text">Source Text:</label> -->
-            <!-- <textarea id="source_text" name="source_text" rows="3" required></textarea> -->
-
             <label for="system_prompt">Your System Prompt:</label>
             <textarea id="system_prompt" name="system_prompt" rows="3" required></textarea>
 
             <label for="system_output">Your Prompt:</label>
             <textarea id="system_output" name="system_output" rows="3" required></textarea>
-
-            <!-- <label for="reference_translation">Reference Translation:</label>
-            <textarea id="reference_translation" name="reference_translation" rows="3" required></textarea> -->
 
             <button type="submit">Submit</button>
         </form>
@@ -51,32 +43,26 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Leaderboard entries will be populated here -->
+                <!-- Leaderboard entries here -->
             </tbody>
         </table>
     </div>
 
     <script>
-        // Handle form submission
+        // Form submission
         document.getElementById('promptForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const name = document.getElementById('name').value.trim();
-            // const source_text = document.getElementById('source_text').value.trim();
             const system_prompt = document.getElementById('system_prompt').value.trim();
             const system_output = document.getElementById('system_output').value.trim();
-            // const reference_translation = document.getElementById('reference_translation').value.trim();
-            // const reference_translation = document.getElementById('reference_translation').value.trim();
-
+            
             fetch('/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // body: JSON.stringify({ name, source_text, system_output, reference_translation }),
-                // body: JSON.stringify({ name, system_prompt, system_output, reference_translation }),
-                // body: JSON.stringify({ name, system_prompt, system_output, reference_translation }),
-                body: JSON.stringify({ name, system_prompt, system_output}),
+                body: JSON.stringify({name, system_prompt, system_output}),
 
             })
             .then(response => response.json())
@@ -95,7 +81,7 @@
             });
         });
 
-        // Function to load leaderboard data
+        // Load leaderboard data
         function loadLeaderboard() {
             fetch('/leaderboard')
                 .then(response => response.json())
@@ -123,10 +109,10 @@
                 });
         }
 
-        // Load leaderboard on page load
+        // Load leaderboard
         window.onload = function() {
             loadLeaderboard();
-            // Optionally, set interval to refresh leaderboard every 10 seconds
+            // and refresh leaderboard every 10 seconds
             setInterval(loadLeaderboard, 10000);
         };
     </script>

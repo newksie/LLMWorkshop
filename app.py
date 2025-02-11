@@ -10,7 +10,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///submissions.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -28,15 +27,11 @@ def index():
 def submit():
     data = request.get_json()
     name = data.get('name', '').strip()
-    # source_text = data.get('source_text', '').strip()
     system_prompt = data.get('system_prompt', '').strip()
     system_output = data.get('system_output', '').strip()
-    # reference_translation = data.get('reference_translation', '').strip()
-    # reference_translation = "J'adorerais boire un café avec toi sur le balcon, mais avons-nous un canapé pour nous asseoir ? Nous pourrions aussi prendre quelques collations, peut-être des canapés ?"
-    # reference_translation = "I would love to drink some coffee with you on the balcony, but do we have a sofa to sit on? We could also have some snacks, perhaps some canapes?"
+    # 'Gold standard' english
     reference_translation = "Last weekend, I was wandering around town and, by chance, I ran into my mum - we live far from each other and don't often see each other. Anyway, she gets cold easily and I was peckish so we went to a local pub to warm up, eat an afternoon snack and have a drink. In the pub/bar, the lights were blinding and mum was annoyed that the waiter was disrespectfully casual. So we went to another bar that a friend said served fancy cocktails. But, in fact, it was a complete mess - the drinks were sickly and everyone was really drunk. In the end, after all of that, we finished our catch-up at my house with a bottle of cheap wine and some crackers."
     if not name or not system_output or not reference_translation or not system_prompt:
-    # if not name or not source_text or not system_output or not reference_translation:
 
         return jsonify({'error': 'All fields are required.'}), 400
     
@@ -46,14 +41,10 @@ def submit():
         
         score = SimilarityScore(reference_translation, llm_output)
 
-        # score = len(reference_translation)
-
         submission = PromptSubmission(
             name=name,
-            # source_text=source_text,
             system_prompt=system_prompt,
             system_output=system_output,
-            # reference_translation=reference_translation,
             llm_output=llm_output,
             score=score
         )
